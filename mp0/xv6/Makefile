@@ -127,7 +127,8 @@ UPROGS=\
 	$U/_zombie\
 	$U/_count\
 	$U/_testgen\
-	$U/_mp0\
+
+UEXTRA=$U/_mp0
 
 fs.img: mkfs/mkfs README $(UEXTRA) $(UPROGS)
 	mkfs/mkfs fs.img README $(UEXTRA) $(UPROGS)
