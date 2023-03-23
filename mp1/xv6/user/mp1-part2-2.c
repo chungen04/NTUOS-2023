@@ -7,6 +7,7 @@
 void s5(int signo)
 {
     int i = 5;
+    
     while(1) {
         if(signo) printf("handler 5: %d\n", i*5);
         else printf("handler 5: %d\n", i*5+1);

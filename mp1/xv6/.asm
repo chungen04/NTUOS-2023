@@ -18,7 +18,7 @@ void s4(int signo)
    8:	85aa                	mv	a1,a0
     printf("handler 4: %d\n", signo);
    a:	00001517          	auipc	a0,0x1
-   e:	e2e50513          	addi	a0,a0,-466 # e38 <thread_kill+0x12>
+   e:	f1e50513          	addi	a0,a0,-226 # f28 <thread_kill+0x12>
   12:	00001097          	auipc	ra,0x1
   16:	9e8080e7          	jalr	-1560(ra) # 9fa <printf>
 }
@@ -39,7 +39,7 @@ void s3(int signo)
   2a:	85aa                	mv	a1,a0
     printf("handler 3: %d\n", signo);
   2c:	00001517          	auipc	a0,0x1
-  30:	e1c50513          	addi	a0,a0,-484 # e48 <thread_kill+0x22>
+  30:	f0c50513          	addi	a0,a0,-244 # f38 <thread_kill+0x22>
   34:	00001097          	auipc	ra,0x1
   38:	9c6080e7          	jalr	-1594(ra) # 9fa <printf>
 }
@@ -65,7 +65,7 @@ void s3(int signo)
   5a:	4495                	li	s1,5
         else printf("handler 5: %d\n", i*5+1);
   5c:	00001a97          	auipc	s5,0x1
-  60:	dfca8a93          	addi	s5,s5,-516 # e58 <thread_kill+0x32>
+  60:	eeca8a93          	addi	s5,s5,-276 # f48 <thread_kill+0x32>
         if(i == 8) {
   64:	4a21                	li	s4,8
   66:	a01d                	j	8c <s5+0x48>
@@ -80,10 +80,10 @@ void s3(int signo)
   76:	01449663          	bne	s1,s4,82 <s5+0x3e>
             thread_exit();
   7a:	00001097          	auipc	ra,0x1
-  7e:	cf8080e7          	jalr	-776(ra) # d72 <thread_exit>
+  7e:	c5c080e7          	jalr	-932(ra) # cd6 <thread_exit>
         thread_yield();
   82:	00001097          	auipc	ra,0x1
-  86:	cb8080e7          	jalr	-840(ra) # d3a <thread_yield>
+  86:	dec080e7          	jalr	-532(ra) # e6e <thread_yield>
     while(1) {
   8a:	2915                	addiw	s2,s2,5
         if(signo) printf("handler 5: %d\n", i*5);
@@ -114,7 +114,7 @@ void s2(int signo)
         if(signo) printf("handler 2: %d\n", i*2);
         else printf("handler 2: %d\n", i*2+1);
   b6:	00001a17          	auipc	s4,0x1
-  ba:	db2a0a13          	addi	s4,s4,-590 # e68 <thread_kill+0x42>
+  ba:	ea2a0a13          	addi	s4,s4,-350 # f58 <thread_kill+0x42>
         i++;
         if(i == 26) {
   be:	03400993          	li	s3,52
@@ -131,7 +131,7 @@ void s2(int signo)
         }
         thread_yield();
   d6:	00001097          	auipc	ra,0x1
-  da:	c64080e7          	jalr	-924(ra) # d3a <thread_yield>
+  da:	d98080e7          	jalr	-616(ra) # e6e <thread_yield>
         if(signo) printf("handler 2: %d\n", i*2);
   de:	fe0913e3          	bnez	s2,c4 <s2+0x24>
         else printf("handler 2: %d\n", i*2+1);
@@ -171,12 +171,12 @@ void f2(void *arg)
         printf("thread 2: %d\n", i++);
  112:	4581                	li	a1,0
  114:	00001517          	auipc	a0,0x1
- 118:	d6450513          	addi	a0,a0,-668 # e78 <thread_kill+0x52>
+ 118:	e5450513          	addi	a0,a0,-428 # f68 <thread_kill+0x52>
  11c:	00001097          	auipc	ra,0x1
  120:	8de080e7          	jalr	-1826(ra) # 9fa <printf>
  124:	4485                	li	s1,1
  126:	00001a17          	auipc	s4,0x1
- 12a:	d52a0a13          	addi	s4,s4,-686 # e78 <thread_kill+0x52>
+ 12a:	e42a0a13          	addi	s4,s4,-446 # f68 <thread_kill+0x52>
         if (i == 4) {
  12e:	4991                	li	s3,4
  130:	a011                	j	134 <f2+0x32>
@@ -186,7 +186,7 @@ void f2(void *arg)
         }
         thread_yield();
  134:	00001097          	auipc	ra,0x1
- 138:	c06080e7          	jalr	-1018(ra) # d3a <thread_yield>
+ 138:	d3a080e7          	jalr	-710(ra) # e6e <thread_yield>
         printf("thread 2: %d\n", i++);
  13c:	0014891b          	addiw	s2,s1,1
  140:	85a6                	mv	a1,s1
@@ -197,7 +197,7 @@ void f2(void *arg)
  14c:	ff3913e3          	bne	s2,s3,132 <f2+0x30>
             thread_exit();
  150:	00001097          	auipc	ra,0x1
- 154:	c22080e7          	jalr	-990(ra) # d72 <thread_exit>
+ 154:	b86080e7          	jalr	-1146(ra) # cd6 <thread_exit>
  158:	bfe9                	j	132 <f2+0x30>
 
 000000000000015a <f5>:
@@ -215,16 +215,16 @@ void f2(void *arg)
  16e:	eda58593          	addi	a1,a1,-294 # 44 <s5>
  172:	4505                	li	a0,1
  174:	00001097          	auipc	ra,0x1
- 178:	ca6080e7          	jalr	-858(ra) # e1a <thread_register_handler>
+ 178:	d86080e7          	jalr	-634(ra) # efa <thread_register_handler>
         printf("thread 5: %d\n", i++);
  17c:	45a9                	li	a1,10
  17e:	00001517          	auipc	a0,0x1
- 182:	d0a50513          	addi	a0,a0,-758 # e88 <thread_kill+0x62>
+ 182:	dfa50513          	addi	a0,a0,-518 # f78 <thread_kill+0x62>
  186:	00001097          	auipc	ra,0x1
  18a:	874080e7          	jalr	-1932(ra) # 9fa <printf>
  18e:	44ad                	li	s1,11
  190:	00001a17          	auipc	s4,0x1
- 194:	cf8a0a13          	addi	s4,s4,-776 # e88 <thread_kill+0x62>
+ 194:	de8a0a13          	addi	s4,s4,-536 # f78 <thread_kill+0x62>
         if (i == 17) {
  198:	49c5                	li	s3,17
  19a:	a011                	j	19e <f5+0x44>
@@ -232,7 +232,7 @@ void f2(void *arg)
  19c:	84ca                	mv	s1,s2
         thread_yield();
  19e:	00001097          	auipc	ra,0x1
- 1a2:	b9c080e7          	jalr	-1124(ra) # d3a <thread_yield>
+ 1a2:	cd0080e7          	jalr	-816(ra) # e6e <thread_yield>
         printf("thread 5: %d\n", i++);
  1a6:	0014891b          	addiw	s2,s1,1
  1aa:	85a6                	mv	a1,s1
@@ -243,7 +243,7 @@ void f2(void *arg)
  1b6:	ff3913e3          	bne	s2,s3,19c <f5+0x42>
             thread_exit();
  1ba:	00001097          	auipc	ra,0x1
- 1be:	bb8080e7          	jalr	-1096(ra) # d72 <thread_exit>
+ 1be:	b1c080e7          	jalr	-1252(ra) # cd6 <thread_exit>
  1c2:	bfe9                	j	19c <f5+0x42>
 
 00000000000001c4 <f4>:
@@ -261,16 +261,16 @@ void f2(void *arg)
  1d8:	e2c58593          	addi	a1,a1,-468 # 0 <s4>
  1dc:	4501                	li	a0,0
  1de:	00001097          	auipc	ra,0x1
- 1e2:	c3c080e7          	jalr	-964(ra) # e1a <thread_register_handler>
+ 1e2:	d1c080e7          	jalr	-740(ra) # efa <thread_register_handler>
         printf("thread 4: %d\n", i++);
  1e6:	3e800593          	li	a1,1000
  1ea:	00001517          	auipc	a0,0x1
- 1ee:	cae50513          	addi	a0,a0,-850 # e98 <thread_kill+0x72>
+ 1ee:	d9e50513          	addi	a0,a0,-610 # f88 <thread_kill+0x72>
  1f2:	00001097          	auipc	ra,0x1
  1f6:	808080e7          	jalr	-2040(ra) # 9fa <printf>
  1fa:	3e900493          	li	s1,1001
  1fe:	00001a17          	auipc	s4,0x1
- 202:	c9aa0a13          	addi	s4,s4,-870 # e98 <thread_kill+0x72>
+ 202:	d8aa0a13          	addi	s4,s4,-630 # f88 <thread_kill+0x72>
         if (i == 1011) {
  206:	3f300993          	li	s3,1011
  20a:	a011                	j	20e <f4+0x4a>
@@ -278,7 +278,7 @@ void f2(void *arg)
  20c:	84ca                	mv	s1,s2
         thread_yield();
  20e:	00001097          	auipc	ra,0x1
- 212:	b2c080e7          	jalr	-1236(ra) # d3a <thread_yield>
+ 212:	c60080e7          	jalr	-928(ra) # e6e <thread_yield>
         printf("thread 4: %d\n", i++);
  216:	0014891b          	addiw	s2,s1,1
  21a:	85a6                	mv	a1,s1
@@ -289,7 +289,7 @@ void f2(void *arg)
  226:	ff3913e3          	bne	s2,s3,20c <f4+0x48>
             thread_exit();
  22a:	00001097          	auipc	ra,0x1
- 22e:	b48080e7          	jalr	-1208(ra) # d72 <thread_exit>
+ 22e:	aac080e7          	jalr	-1364(ra) # cd6 <thread_exit>
  232:	bfe9                	j	20c <f4+0x48>
 
 0000000000000234 <f3>:
@@ -310,7 +310,7 @@ void f2(void *arg)
  24e:	dd858593          	addi	a1,a1,-552 # 22 <s3>
  252:	4501                	li	a0,0
  254:	00001097          	auipc	ra,0x1
- 258:	bc6080e7          	jalr	-1082(ra) # e1a <thread_register_handler>
+ 258:	ca6080e7          	jalr	-858(ra) # efa <thread_register_handler>
     struct thread *t4 = thread_create(f4, NULL);
  25c:	4581                	li	a1,0
  25e:	00000517          	auipc	a0,0x0
@@ -333,13 +333,13 @@ void f2(void *arg)
  290:	9f8080e7          	jalr	-1544(ra) # c84 <thread_add_runqueue>
     int i = 10000;
  294:	6589                	lui	a1,0x2
- 296:	71058593          	addi	a1,a1,1808 # 2710 <__global_pointer$+0x100f>
+ 296:	71058593          	addi	a1,a1,1808 # 2710 <__global_pointer$+0xf1f>
         printf("thread 3: %d\n", i++);
  29a:	00001997          	auipc	s3,0x1
- 29e:	c0e98993          	addi	s3,s3,-1010 # ea8 <thread_kill+0x82>
+ 29e:	cfe98993          	addi	s3,s3,-770 # f98 <thread_kill+0x82>
         if (i == 10003) {
  2a2:	6a89                	lui	s5,0x2
- 2a4:	713a8913          	addi	s2,s5,1811 # 2713 <__global_pointer$+0x1012>
+ 2a4:	713a8913          	addi	s2,s5,1811 # 2713 <__global_pointer$+0xf22>
         if (i == 10004) {
  2a8:	714a8a13          	addi	s4,s5,1812
         if (i == 10006) {
@@ -349,22 +349,22 @@ void f2(void *arg)
  2b2:	4585                	li	a1,1
  2b4:	855e                	mv	a0,s7
  2b6:	00001097          	auipc	ra,0x1
- 2ba:	b70080e7          	jalr	-1168(ra) # e26 <thread_kill>
+ 2ba:	c60080e7          	jalr	-928(ra) # f16 <thread_kill>
         if (i == 10006) {
  2be:	a821                	j	2d6 <f3+0xa2>
             thread_kill(t5, 1);
  2c0:	4585                	li	a1,1
  2c2:	855a                	mv	a0,s6
  2c4:	00001097          	auipc	ra,0x1
- 2c8:	b62080e7          	jalr	-1182(ra) # e26 <thread_kill>
+ 2c8:	c52080e7          	jalr	-942(ra) # f16 <thread_kill>
         if (i == 10006) {
  2cc:	a029                	j	2d6 <f3+0xa2>
             thread_exit();
  2ce:	00001097          	auipc	ra,0x1
- 2d2:	aa4080e7          	jalr	-1372(ra) # d72 <thread_exit>
+ 2d2:	a08080e7          	jalr	-1528(ra) # cd6 <thread_exit>
         thread_yield();
  2d6:	00001097          	auipc	ra,0x1
- 2da:	a64080e7          	jalr	-1436(ra) # d3a <thread_yield>
+ 2da:	b98080e7          	jalr	-1128(ra) # e6e <thread_yield>
         printf("thread 3: %d\n", i++);
  2de:	85a6                	mv	a1,s1
  2e0:	0015849b          	addiw	s1,a1,1
@@ -401,7 +401,7 @@ void f1(void *arg)
  316:	d8e58593          	addi	a1,a1,-626 # a0 <s2>
  31a:	4501                	li	a0,0
  31c:	00001097          	auipc	ra,0x1
- 320:	afe080e7          	jalr	-1282(ra) # e1a <thread_register_handler>
+ 320:	bde080e7          	jalr	-1058(ra) # efa <thread_register_handler>
     int i = 100;
 
     struct thread *t2 = thread_create(f2, NULL);
@@ -431,7 +431,7 @@ void f1(void *arg)
     while(1) {
         printf("thread 1: %d\n", i++);
  360:	00001997          	auipc	s3,0x1
- 364:	b5898993          	addi	s3,s3,-1192 # eb8 <thread_kill+0x92>
+ 364:	c4898993          	addi	s3,s3,-952 # fa8 <thread_kill+0x92>
         if (i == 101) {
  368:	06500913          	li	s2,101
             thread_kill(t2, 0);
@@ -447,23 +447,23 @@ void f1(void *arg)
  376:	4581                	li	a1,0
  378:	855e                	mv	a0,s7
  37a:	00001097          	auipc	ra,0x1
- 37e:	aac080e7          	jalr	-1364(ra) # e26 <thread_kill>
+ 37e:	b9c080e7          	jalr	-1124(ra) # f16 <thread_kill>
         if (i == 105) {
  382:	a821                	j	39a <f1+0x9e>
             thread_kill(t3, 0);
  384:	4581                	li	a1,0
  386:	855a                	mv	a0,s6
  388:	00001097          	auipc	ra,0x1
- 38c:	a9e080e7          	jalr	-1378(ra) # e26 <thread_kill>
+ 38c:	b8e080e7          	jalr	-1138(ra) # f16 <thread_kill>
         if (i == 105) {
  390:	a029                	j	39a <f1+0x9e>
             thread_exit();
  392:	00001097          	auipc	ra,0x1
- 396:	9e0080e7          	jalr	-1568(ra) # d72 <thread_exit>
+ 396:	944080e7          	jalr	-1724(ra) # cd6 <thread_exit>
         }
         thread_yield();
  39a:	00001097          	auipc	ra,0x1
- 39e:	9a0080e7          	jalr	-1632(ra) # d3a <thread_yield>
+ 39e:	ad4080e7          	jalr	-1324(ra) # e6e <thread_yield>
         printf("thread 1: %d\n", i++);
  3a2:	85a6                	mv	a1,s1
  3a4:	0015849b          	addiw	s1,a1,1
@@ -490,7 +490,7 @@ int main(int argc, char **argv)
  3c6:	0800                	addi	s0,sp,16
     printf("mp1-part2-2\n");
  3c8:	00001517          	auipc	a0,0x1
- 3cc:	b0050513          	addi	a0,a0,-1280 # ec8 <thread_kill+0xa2>
+ 3cc:	bf050513          	addi	a0,a0,-1040 # fb8 <thread_kill+0xa2>
  3d0:	00000097          	auipc	ra,0x0
  3d4:	62a080e7          	jalr	1578(ra) # 9fa <printf>
     struct thread *t1 = thread_create(f1, NULL);
@@ -504,10 +504,10 @@ int main(int argc, char **argv)
  3ee:	89a080e7          	jalr	-1894(ra) # c84 <thread_add_runqueue>
     thread_start_threading();
  3f2:	00001097          	auipc	ra,0x1
- 3f6:	9fc080e7          	jalr	-1540(ra) # dee <thread_start_threading>
+ 3f6:	adc080e7          	jalr	-1316(ra) # ece <thread_start_threading>
     printf("\nexited\n");
  3fa:	00001517          	auipc	a0,0x1
- 3fe:	ade50513          	addi	a0,a0,-1314 # ed8 <thread_kill+0xb2>
+ 3fe:	bce50513          	addi	a0,a0,-1074 # fc8 <thread_kill+0xb2>
  402:	00000097          	auipc	ra,0x0
  406:	5f8080e7          	jalr	1528(ra) # 9fa <printf>
     exit(0);
@@ -1207,8 +1207,8 @@ printint(int fd, int xx, int base, int sgn)
   do{
     buf[i++] = digits[x % base];
  764:	2601                	sext.w	a2,a2
- 766:	00000517          	auipc	a0,0x0
- 76a:	78a50513          	addi	a0,a0,1930 # ef0 <digits>
+ 766:	00001517          	auipc	a0,0x1
+ 76a:	87a50513          	addi	a0,a0,-1926 # fe0 <digits>
  76e:	883a                	mv	a6,a4
  770:	2705                	addiw	a4,a4,1
  772:	02c5f7bb          	remuw	a5,a1,a2
@@ -1318,7 +1318,7 @@ vprintf(int fd, const char *fmt, va_list ap)
  82e:	07000d93          	li	s11,112
     putc(fd, digits[x >> (sizeof(uint64) * 8 - 4)]);
  832:	00000b97          	auipc	s7,0x0
- 836:	6beb8b93          	addi	s7,s7,1726 # ef0 <digits>
+ 836:	7aeb8b93          	addi	s7,s7,1966 # fe0 <digits>
  83a:	a839                	j	858 <vprintf+0x6a>
         putc(fd, c);
  83c:	85ca                	mv	a1,s2
@@ -1472,7 +1472,7 @@ vprintf(int fd, const char *fmt, va_list ap)
  970:	bdf9                	j	84e <vprintf+0x60>
           s = "(null)";
  972:	00000917          	auipc	s2,0x0
- 976:	57690913          	addi	s2,s2,1398 # ee8 <thread_kill+0xc2>
+ 976:	66690913          	addi	s2,s2,1638 # fd8 <thread_kill+0xc2>
         while(*s != 0){
  97a:	02800593          	li	a1,40
  97e:	bff1                	j	95a <vprintf+0x16c>
@@ -1595,7 +1595,7 @@ free(void *ap)
  a36:	ff050693          	addi	a3,a0,-16
   for(p = freep; !(bp > p && bp < p->s.ptr); p = p->s.ptr)
  a3a:	00000797          	auipc	a5,0x0
- a3e:	4ce7b783          	ld	a5,1230(a5) # f08 <freep>
+ a3e:	5be7b783          	ld	a5,1470(a5) # ff8 <freep>
  a42:	a805                	j	a72 <free+0x42>
     if(p >= p->s.ptr && (bp > p || bp < p->s.ptr))
       break;
@@ -1654,7 +1654,7 @@ free(void *ap)
  aa8:	e394                	sd	a3,0(a5)
   freep = p;
  aaa:	00000717          	auipc	a4,0x0
- aae:	44f73f23          	sd	a5,1118(a4) # f08 <freep>
+ aae:	54f73723          	sd	a5,1358(a4) # ff8 <freep>
 }
  ab2:	6422                	ld	s0,8(sp)
  ab4:	0141                	addi	sp,sp,16
@@ -1689,7 +1689,7 @@ malloc(uint nbytes)
  ada:	0485                	addi	s1,s1,1
   if((prevp = freep) == 0){
  adc:	00000517          	auipc	a0,0x0
- ae0:	42c53503          	ld	a0,1068(a0) # f08 <freep>
+ ae0:	51c53503          	ld	a0,1308(a0) # ff8 <freep>
  ae4:	c515                	beqz	a0,b10 <malloc+0x58>
     base.s.ptr = freep = prevp = &base;
     base.s.size = 0;
@@ -1714,15 +1714,15 @@ malloc(uint nbytes)
     }
     if(p == freep)
  b04:	00000917          	auipc	s2,0x0
- b08:	40490913          	addi	s2,s2,1028 # f08 <freep>
+ b08:	4f490913          	addi	s2,s2,1268 # ff8 <freep>
   if(p == (char*)-1)
  b0c:	5afd                	li	s5,-1
  b0e:	a88d                	j	b80 <malloc+0xc8>
     base.s.ptr = freep = prevp = &base;
  b10:	00000797          	auipc	a5,0x0
- b14:	40878793          	addi	a5,a5,1032 # f18 <base>
+ b14:	4f878793          	addi	a5,a5,1272 # 1008 <base>
  b18:	00000717          	auipc	a4,0x0
- b1c:	3ef73823          	sd	a5,1008(a4) # f08 <freep>
+ b1c:	4ef73023          	sd	a5,1248(a4) # ff8 <freep>
  b20:	e39c                	sd	a5,0(a5)
     base.s.size = 0;
  b22:	0007a423          	sw	zero,8(a5)
@@ -1742,7 +1742,7 @@ malloc(uint nbytes)
  b3a:	0137a423          	sw	s3,8(a5)
       freep = prevp;
  b3e:	00000717          	auipc	a4,0x0
- b42:	3ca73523          	sd	a0,970(a4) # f08 <freep>
+ b42:	4aa73d23          	sd	a0,1210(a4) # ff8 <freep>
       return (void*)(p + 1);
  b46:	01078513          	addi	a0,a5,16
       if((p = morecore(nunits)) == 0)
@@ -1868,7 +1868,7 @@ struct thread *thread_create(void (*f)(void *), void *arg){
  c44:	0124b423          	sd	s2,8(s1)
     t->ID  = id;
  c48:	00000717          	auipc	a4,0x0
- c4c:	2bc70713          	addi	a4,a4,700 # f04 <id>
+ c4c:	3ac70713          	addi	a4,a4,940 # ff4 <id>
  c50:	431c                	lw	a5,0(a4)
  c52:	08f4aa23          	sw	a5,148(s1)
     t->buf_set = 0;
@@ -1912,266 +1912,357 @@ void thread_add_runqueue(struct thread *t){
  c88:	0800                	addi	s0,sp,16
     if(current_thread == NULL){
  c8a:	00000797          	auipc	a5,0x0
- c8e:	2867b783          	ld	a5,646(a5) # f10 <current_thread>
- c92:	cb91                	beqz	a5,ca6 <thread_add_runqueue+0x22>
+ c8e:	3767b783          	ld	a5,886(a5) # 1000 <current_thread>
+ c92:	cf91                	beqz	a5,cae <thread_add_runqueue+0x2a>
         t->previous = t;
         t->next = t;
     }
     else{
         // TODO
+        t->sig_handler[0] = current_thread->sig_handler[0];
+ c94:	77d8                	ld	a4,168(a5)
+ c96:	f558                	sd	a4,168(a0)
+        t->sig_handler[1] = current_thread->sig_handler[1];
+ c98:	7bd8                	ld	a4,176(a5)
+ c9a:	f958                	sd	a4,176(a0)
         current_thread->previous->next = t;
- c94:	6fd8                	ld	a4,152(a5)
- c96:	f348                	sd	a0,160(a4)
+ c9c:	6fd8                	ld	a4,152(a5)
+ c9e:	f348                	sd	a0,160(a4)
         t->previous = current_thread->previous;
- c98:	6fd8                	ld	a4,152(a5)
- c9a:	ed58                	sd	a4,152(a0)
+ ca0:	6fd8                	ld	a4,152(a5)
+ ca2:	ed58                	sd	a4,152(a0)
         current_thread->previous = t;
- c9c:	efc8                	sd	a0,152(a5)
+ ca4:	efc8                	sd	a0,152(a5)
         t->next = current_thread;
- c9e:	f15c                	sd	a5,160(a0)
+ ca6:	f15c                	sd	a5,160(a0)
     }
+    return;
 }
- ca0:	6422                	ld	s0,8(sp)
- ca2:	0141                	addi	sp,sp,16
- ca4:	8082                	ret
+ ca8:	6422                	ld	s0,8(sp)
+ caa:	0141                	addi	sp,sp,16
+ cac:	8082                	ret
         current_thread = t;
- ca6:	00000797          	auipc	a5,0x0
- caa:	26a7b523          	sd	a0,618(a5) # f10 <current_thread>
+ cae:	00000797          	auipc	a5,0x0
+ cb2:	34a7b923          	sd	a0,850(a5) # 1000 <current_thread>
         t->previous = t;
- cae:	ed48                	sd	a0,152(a0)
+ cb6:	ed48                	sd	a0,152(a0)
         t->next = t;
- cb0:	f148                	sd	a0,160(a0)
- cb2:	b7fd                	j	ca0 <thread_add_runqueue+0x1c>
+ cb8:	f148                	sd	a0,160(a0)
+ cba:	b7fd                	j	ca8 <thread_add_runqueue+0x24>
 
-0000000000000cb4 <dispatch>:
-
+0000000000000cbc <schedule>:
+    }
     return;
 
 }
 
-void dispatch(void){
- cb4:	1141                	addi	sp,sp,-16
- cb6:	e406                	sd	ra,8(sp)
- cb8:	e022                	sd	s0,0(sp)
- cba:	0800                	addi	s0,sp,16
-    // TODO
-    if(current_thread->buf_set){
- cbc:	00000517          	auipc	a0,0x0
- cc0:	25453503          	ld	a0,596(a0) # f10 <current_thread>
- cc4:	09052783          	lw	a5,144(a0)
- cc8:	e39d                	bnez	a5,cee <dispatch+0x3a>
-        
-        longjmp(current_thread->env, 1);
-    
-    }else{
-        
-        if(setjmp(current_thread->env) == 0){
- cca:	02050513          	addi	a0,a0,32
- cce:	00000097          	auipc	ra,0x0
- cd2:	ece080e7          	jalr	-306(ra) # b9c <setjmp>
- cd6:	c505                	beqz	a0,cfe <dispatch+0x4a>
-            current_thread->env->sp = (unsigned long)current_thread->stack_p;
-            current_thread->buf_set = 1;
-            longjmp(current_thread->env, 1);
-        }
-        current_thread->fp(current_thread->arg);
- cd8:	00000797          	auipc	a5,0x0
- cdc:	2387b783          	ld	a5,568(a5) # f10 <current_thread>
- ce0:	6398                	ld	a4,0(a5)
- ce2:	6788                	ld	a0,8(a5)
- ce4:	9702                	jalr	a4
-    
-    }
-    
-}
- ce6:	60a2                	ld	ra,8(sp)
- ce8:	6402                	ld	s0,0(sp)
- cea:	0141                	addi	sp,sp,16
- cec:	8082                	ret
-        longjmp(current_thread->env, 1);
- cee:	4585                	li	a1,1
- cf0:	02050513          	addi	a0,a0,32
- cf4:	00000097          	auipc	ra,0x0
- cf8:	ee0080e7          	jalr	-288(ra) # bd4 <longjmp>
- cfc:	b7ed                	j	ce6 <dispatch+0x32>
-            current_thread->env->sp = (unsigned long)current_thread->stack_p;
- cfe:	00000517          	auipc	a0,0x0
- d02:	21253503          	ld	a0,530(a0) # f10 <current_thread>
- d06:	6d1c                	ld	a5,24(a0)
- d08:	e55c                	sd	a5,136(a0)
-            current_thread->buf_set = 1;
- d0a:	4785                	li	a5,1
- d0c:	08f52823          	sw	a5,144(a0)
-            longjmp(current_thread->env, 1);
- d10:	4585                	li	a1,1
- d12:	02050513          	addi	a0,a0,32
- d16:	00000097          	auipc	ra,0x0
- d1a:	ebe080e7          	jalr	-322(ra) # bd4 <longjmp>
- d1e:	bf6d                	j	cd8 <dispatch+0x24>
-
-0000000000000d20 <schedule>:
-
 void schedule(void){
- d20:	1141                	addi	sp,sp,-16
- d22:	e422                	sd	s0,8(sp)
- d24:	0800                	addi	s0,sp,16
+ cbc:	1141                	addi	sp,sp,-16
+ cbe:	e422                	sd	s0,8(sp)
+ cc0:	0800                	addi	s0,sp,16
 
     // TODO
     current_thread = current_thread->next;
- d26:	00000797          	auipc	a5,0x0
- d2a:	1ea78793          	addi	a5,a5,490 # f10 <current_thread>
- d2e:	6398                	ld	a4,0(a5)
- d30:	7358                	ld	a4,160(a4)
- d32:	e398                	sd	a4,0(a5)
-
-}
- d34:	6422                	ld	s0,8(sp)
- d36:	0141                	addi	sp,sp,16
- d38:	8082                	ret
-
-0000000000000d3a <thread_yield>:
-void thread_yield(void){
- d3a:	1141                	addi	sp,sp,-16
- d3c:	e406                	sd	ra,8(sp)
- d3e:	e022                	sd	s0,0(sp)
- d40:	0800                	addi	s0,sp,16
-    if(setjmp(current_thread->env) == 0){
- d42:	00000517          	auipc	a0,0x0
- d46:	1ce53503          	ld	a0,462(a0) # f10 <current_thread>
- d4a:	02050513          	addi	a0,a0,32
- d4e:	00000097          	auipc	ra,0x0
- d52:	e4e080e7          	jalr	-434(ra) # b9c <setjmp>
- d56:	c509                	beqz	a0,d60 <thread_yield+0x26>
-}
- d58:	60a2                	ld	ra,8(sp)
- d5a:	6402                	ld	s0,0(sp)
- d5c:	0141                	addi	sp,sp,16
- d5e:	8082                	ret
-        schedule();
- d60:	00000097          	auipc	ra,0x0
- d64:	fc0080e7          	jalr	-64(ra) # d20 <schedule>
-        dispatch();
- d68:	00000097          	auipc	ra,0x0
- d6c:	f4c080e7          	jalr	-180(ra) # cb4 <dispatch>
+ cc2:	00000797          	auipc	a5,0x0
+ cc6:	33e78793          	addi	a5,a5,830 # 1000 <current_thread>
+ cca:	6398                	ld	a4,0(a5)
+ ccc:	7358                	ld	a4,160(a4)
+ cce:	e398                	sd	a4,0(a5)
     return;
- d70:	b7e5                	j	d58 <thread_yield+0x1e>
 
-0000000000000d72 <thread_exit>:
+}
+ cd0:	6422                	ld	s0,8(sp)
+ cd2:	0141                	addi	sp,sp,16
+ cd4:	8082                	ret
+
+0000000000000cd6 <thread_exit>:
 
 void thread_exit(void){
- d72:	1141                	addi	sp,sp,-16
- d74:	e406                	sd	ra,8(sp)
- d76:	e022                	sd	s0,0(sp)
- d78:	0800                	addi	s0,sp,16
+ cd6:	1141                	addi	sp,sp,-16
+ cd8:	e406                	sd	ra,8(sp)
+ cda:	e022                	sd	s0,0(sp)
+ cdc:	0800                	addi	s0,sp,16
 
     if(current_thread->next != current_thread){
- d7a:	00000797          	auipc	a5,0x0
- d7e:	1967b783          	ld	a5,406(a5) # f10 <current_thread>
- d82:	73d8                	ld	a4,160(a5)
- d84:	02e78e63          	beq	a5,a4,dc0 <thread_exit+0x4e>
+ cde:	00000797          	auipc	a5,0x0
+ ce2:	3227b783          	ld	a5,802(a5) # 1000 <current_thread>
+ ce6:	73d8                	ld	a4,160(a5)
+ ce8:	02e78e63          	beq	a5,a4,d24 <thread_exit+0x4e>
         // TODO
         
         current_thread->previous->next = current_thread->next;
- d88:	6fd4                	ld	a3,152(a5)
- d8a:	f2d8                	sd	a4,160(a3)
+ cec:	6fd4                	ld	a3,152(a5)
+ cee:	f2d8                	sd	a4,160(a3)
         current_thread->next->previous = current_thread->previous;
- d8c:	6fd4                	ld	a3,152(a5)
- d8e:	ef54                	sd	a3,152(a4)
+ cf0:	6fd4                	ld	a3,152(a5)
+ cf2:	ef54                	sd	a3,152(a4)
         free(current_thread->stack);
- d90:	6b88                	ld	a0,16(a5)
- d92:	00000097          	auipc	ra,0x0
- d96:	c9e080e7          	jalr	-866(ra) # a30 <free>
+ cf4:	6b88                	ld	a0,16(a5)
+ cf6:	00000097          	auipc	ra,0x0
+ cfa:	d3a080e7          	jalr	-710(ra) # a30 <free>
         struct thread* t = current_thread;
- d9a:	00000797          	auipc	a5,0x0
- d9e:	17678793          	addi	a5,a5,374 # f10 <current_thread>
- da2:	6388                	ld	a0,0(a5)
+ cfe:	00000797          	auipc	a5,0x0
+ d02:	30278793          	addi	a5,a5,770 # 1000 <current_thread>
+ d06:	6388                	ld	a0,0(a5)
         current_thread = current_thread->next;
- da4:	7158                	ld	a4,160(a0)
- da6:	e398                	sd	a4,0(a5)
+ d08:	7158                	ld	a4,160(a0)
+ d0a:	e398                	sd	a4,0(a5)
         free(t);
- da8:	00000097          	auipc	ra,0x0
- dac:	c88080e7          	jalr	-888(ra) # a30 <free>
+ d0c:	00000097          	auipc	ra,0x0
+ d10:	d24080e7          	jalr	-732(ra) # a30 <free>
         dispatch();
- db0:	00000097          	auipc	ra,0x0
- db4:	f04080e7          	jalr	-252(ra) # cb4 <dispatch>
-        free(current_thread->stack);
+ d14:	00000097          	auipc	ra,0x0
+ d18:	03e080e7          	jalr	62(ra) # d52 <dispatch>
         free(current_thread);
         longjmp(env_st, 1);
     
     }
+    return;
 }
- db8:	60a2                	ld	ra,8(sp)
- dba:	6402                	ld	s0,0(sp)
- dbc:	0141                	addi	sp,sp,16
- dbe:	8082                	ret
+ d1c:	60a2                	ld	ra,8(sp)
+ d1e:	6402                	ld	s0,0(sp)
+ d20:	0141                	addi	sp,sp,16
+ d22:	8082                	ret
         free(current_thread->stack);
- dc0:	6b88                	ld	a0,16(a5)
- dc2:	00000097          	auipc	ra,0x0
- dc6:	c6e080e7          	jalr	-914(ra) # a30 <free>
+ d24:	6b88                	ld	a0,16(a5)
+ d26:	00000097          	auipc	ra,0x0
+ d2a:	d0a080e7          	jalr	-758(ra) # a30 <free>
         free(current_thread);
- dca:	00000517          	auipc	a0,0x0
- dce:	14653503          	ld	a0,326(a0) # f10 <current_thread>
- dd2:	00000097          	auipc	ra,0x0
- dd6:	c5e080e7          	jalr	-930(ra) # a30 <free>
+ d2e:	00000517          	auipc	a0,0x0
+ d32:	2d253503          	ld	a0,722(a0) # 1000 <current_thread>
+ d36:	00000097          	auipc	ra,0x0
+ d3a:	cfa080e7          	jalr	-774(ra) # a30 <free>
         longjmp(env_st, 1);
- dda:	4585                	li	a1,1
- ddc:	00000517          	auipc	a0,0x0
- de0:	14c50513          	addi	a0,a0,332 # f28 <env_st>
- de4:	00000097          	auipc	ra,0x0
- de8:	df0080e7          	jalr	-528(ra) # bd4 <longjmp>
-}
- dec:	b7f1                	j	db8 <thread_exit+0x46>
+ d3e:	4585                	li	a1,1
+ d40:	00000517          	auipc	a0,0x0
+ d44:	2d850513          	addi	a0,a0,728 # 1018 <env_st>
+ d48:	00000097          	auipc	ra,0x0
+ d4c:	e8c080e7          	jalr	-372(ra) # bd4 <longjmp>
+    return;
+ d50:	b7f1                	j	d1c <thread_exit+0x46>
 
-0000000000000dee <thread_start_threading>:
+0000000000000d52 <dispatch>:
+void dispatch(void){
+ d52:	1101                	addi	sp,sp,-32
+ d54:	ec06                	sd	ra,24(sp)
+ d56:	e822                	sd	s0,16(sp)
+ d58:	e426                	sd	s1,8(sp)
+ d5a:	1000                	addi	s0,sp,32
+    if(current_thread->signo>=0){
+ d5c:	00000517          	auipc	a0,0x0
+ d60:	2a453503          	ld	a0,676(a0) # 1000 <current_thread>
+ d64:	0b852783          	lw	a5,184(a0)
+ d68:	0407ce63          	bltz	a5,dc4 <dispatch+0x72>
+        if(current_thread->handler_buf_set){
+ d6c:	13052703          	lw	a4,304(a0)
+ d70:	eb51                	bnez	a4,e04 <dispatch+0xb2>
+            if(current_thread->sig_handler[current_thread->signo] == NULL_FUNC){
+ d72:	07d1                	addi	a5,a5,20
+ d74:	078e                	slli	a5,a5,0x3
+ d76:	97aa                	add	a5,a5,a0
+ d78:	6798                	ld	a4,8(a5)
+ d7a:	57fd                	li	a5,-1
+ d7c:	08f70c63          	beq	a4,a5,e14 <dispatch+0xc2>
+            if(current_thread->buf_set == 0){ // not started yet, need to move stack pointer
+ d80:	00000517          	auipc	a0,0x0
+ d84:	28053503          	ld	a0,640(a0) # 1000 <current_thread>
+ d88:	09052783          	lw	a5,144(a0)
+ d8c:	eb81                	bnez	a5,d9c <dispatch+0x4a>
+                if(setjmp(current_thread->handler_env) == 0){
+ d8e:	0c050513          	addi	a0,a0,192
+ d92:	00000097          	auipc	ra,0x0
+ d96:	e0a080e7          	jalr	-502(ra) # b9c <setjmp>
+ d9a:	c151                	beqz	a0,e1e <dispatch+0xcc>
+            current_thread->handler_buf_set = 1;
+ d9c:	00000497          	auipc	s1,0x0
+ da0:	26448493          	addi	s1,s1,612 # 1000 <current_thread>
+ da4:	609c                	ld	a5,0(s1)
+ da6:	4705                	li	a4,1
+ da8:	12e7a823          	sw	a4,304(a5)
+            current_thread->sig_handler[current_thread->signo](current_thread->signo);
+ dac:	0b87a503          	lw	a0,184(a5)
+ db0:	01450713          	addi	a4,a0,20
+ db4:	070e                	slli	a4,a4,0x3
+ db6:	97ba                	add	a5,a5,a4
+ db8:	679c                	ld	a5,8(a5)
+ dba:	9782                	jalr	a5
+            current_thread->signo = -1; // reset after done
+ dbc:	609c                	ld	a5,0(s1)
+ dbe:	577d                	li	a4,-1
+ dc0:	0ae7ac23          	sw	a4,184(a5)
+    if(current_thread->buf_set){
+ dc4:	00000517          	auipc	a0,0x0
+ dc8:	23c53503          	ld	a0,572(a0) # 1000 <current_thread>
+ dcc:	09052783          	lw	a5,144(a0)
+ dd0:	e7b5                	bnez	a5,e3c <dispatch+0xea>
+        if(!current_thread->handler_buf_set){
+ dd2:	13052783          	lw	a5,304(a0)
+ dd6:	eb81                	bnez	a5,de6 <dispatch+0x94>
+            if(setjmp(current_thread->env) == 0){
+ dd8:	02050513          	addi	a0,a0,32
+ ddc:	00000097          	auipc	ra,0x0
+ de0:	dc0080e7          	jalr	-576(ra) # b9c <setjmp>
+ de4:	c525                	beqz	a0,e4c <dispatch+0xfa>
+        current_thread->buf_set = 1;
+ de6:	00000797          	auipc	a5,0x0
+ dea:	21a7b783          	ld	a5,538(a5) # 1000 <current_thread>
+ dee:	4705                	li	a4,1
+ df0:	08e7a823          	sw	a4,144(a5)
+        current_thread->fp(current_thread->arg);
+ df4:	6398                	ld	a4,0(a5)
+ df6:	6788                	ld	a0,8(a5)
+ df8:	9702                	jalr	a4
+}
+ dfa:	60e2                	ld	ra,24(sp)
+ dfc:	6442                	ld	s0,16(sp)
+ dfe:	64a2                	ld	s1,8(sp)
+ e00:	6105                	addi	sp,sp,32
+ e02:	8082                	ret
+            longjmp(current_thread->handler_env, 1);
+ e04:	4585                	li	a1,1
+ e06:	0c050513          	addi	a0,a0,192
+ e0a:	00000097          	auipc	ra,0x0
+ e0e:	dca080e7          	jalr	-566(ra) # bd4 <longjmp>
+ e12:	bf4d                	j	dc4 <dispatch+0x72>
+                thread_exit();
+ e14:	00000097          	auipc	ra,0x0
+ e18:	ec2080e7          	jalr	-318(ra) # cd6 <thread_exit>
+ e1c:	b795                	j	d80 <dispatch+0x2e>
+                    current_thread->handler_env->sp = (unsigned long)current_thread->stack_p;
+ e1e:	00000517          	auipc	a0,0x0
+ e22:	1e253503          	ld	a0,482(a0) # 1000 <current_thread>
+ e26:	6d1c                	ld	a5,24(a0)
+ e28:	12f53423          	sd	a5,296(a0)
+                    longjmp(current_thread->handler_env, 1);
+ e2c:	4585                	li	a1,1
+ e2e:	0c050513          	addi	a0,a0,192
+ e32:	00000097          	auipc	ra,0x0
+ e36:	da2080e7          	jalr	-606(ra) # bd4 <longjmp>
+ e3a:	b78d                	j	d9c <dispatch+0x4a>
+        longjmp(current_thread->env, 1);
+ e3c:	4585                	li	a1,1
+ e3e:	02050513          	addi	a0,a0,32
+ e42:	00000097          	auipc	ra,0x0
+ e46:	d92080e7          	jalr	-622(ra) # bd4 <longjmp>
+ e4a:	bf45                	j	dfa <dispatch+0xa8>
+                current_thread->env->sp = (unsigned long)current_thread->stack_p;
+ e4c:	00000517          	auipc	a0,0x0
+ e50:	1b453503          	ld	a0,436(a0) # 1000 <current_thread>
+ e54:	6d1c                	ld	a5,24(a0)
+ e56:	e55c                	sd	a5,136(a0)
+                current_thread->buf_set = 1;
+ e58:	4785                	li	a5,1
+ e5a:	08f52823          	sw	a5,144(a0)
+                longjmp(current_thread->env, 1);
+ e5e:	4585                	li	a1,1
+ e60:	02050513          	addi	a0,a0,32
+ e64:	00000097          	auipc	ra,0x0
+ e68:	d70080e7          	jalr	-656(ra) # bd4 <longjmp>
+ e6c:	bfad                	j	de6 <dispatch+0x94>
+
+0000000000000e6e <thread_yield>:
+void thread_yield(void){
+ e6e:	1141                	addi	sp,sp,-16
+ e70:	e406                	sd	ra,8(sp)
+ e72:	e022                	sd	s0,0(sp)
+ e74:	0800                	addi	s0,sp,16
+    if(current_thread->signo >= 0){
+ e76:	00000517          	auipc	a0,0x0
+ e7a:	18a53503          	ld	a0,394(a0) # 1000 <current_thread>
+ e7e:	0b852783          	lw	a5,184(a0)
+ e82:	0207c663          	bltz	a5,eae <thread_yield+0x40>
+        if(setjmp(current_thread->handler_env) == 0){
+ e86:	0c050513          	addi	a0,a0,192
+ e8a:	00000097          	auipc	ra,0x0
+ e8e:	d12080e7          	jalr	-750(ra) # b9c <setjmp>
+ e92:	c509                	beqz	a0,e9c <thread_yield+0x2e>
+}
+ e94:	60a2                	ld	ra,8(sp)
+ e96:	6402                	ld	s0,0(sp)
+ e98:	0141                	addi	sp,sp,16
+ e9a:	8082                	ret
+            schedule();
+ e9c:	00000097          	auipc	ra,0x0
+ ea0:	e20080e7          	jalr	-480(ra) # cbc <schedule>
+            dispatch();
+ ea4:	00000097          	auipc	ra,0x0
+ ea8:	eae080e7          	jalr	-338(ra) # d52 <dispatch>
+ eac:	b7e5                	j	e94 <thread_yield+0x26>
+        if(setjmp(current_thread->env) == 0){
+ eae:	02050513          	addi	a0,a0,32
+ eb2:	00000097          	auipc	ra,0x0
+ eb6:	cea080e7          	jalr	-790(ra) # b9c <setjmp>
+ eba:	fd69                	bnez	a0,e94 <thread_yield+0x26>
+            schedule();
+ ebc:	00000097          	auipc	ra,0x0
+ ec0:	e00080e7          	jalr	-512(ra) # cbc <schedule>
+            dispatch();
+ ec4:	00000097          	auipc	ra,0x0
+ ec8:	e8e080e7          	jalr	-370(ra) # d52 <dispatch>
+    return;
+ ecc:	b7e1                	j	e94 <thread_yield+0x26>
+
+0000000000000ece <thread_start_threading>:
 
 void thread_start_threading(void){
- dee:	1141                	addi	sp,sp,-16
- df0:	e406                	sd	ra,8(sp)
- df2:	e022                	sd	s0,0(sp)
- df4:	0800                	addi	s0,sp,16
+ ece:	1141                	addi	sp,sp,-16
+ ed0:	e406                	sd	ra,8(sp)
+ ed2:	e022                	sd	s0,0(sp)
+ ed4:	0800                	addi	s0,sp,16
     // TODO
     
     if(setjmp(env_st) == 0){
- df6:	00000517          	auipc	a0,0x0
- dfa:	13250513          	addi	a0,a0,306 # f28 <env_st>
- dfe:	00000097          	auipc	ra,0x0
- e02:	d9e080e7          	jalr	-610(ra) # b9c <setjmp>
- e06:	c509                	beqz	a0,e10 <thread_start_threading+0x22>
+ ed6:	00000517          	auipc	a0,0x0
+ eda:	14250513          	addi	a0,a0,322 # 1018 <env_st>
+ ede:	00000097          	auipc	ra,0x0
+ ee2:	cbe080e7          	jalr	-834(ra) # b9c <setjmp>
+ ee6:	c509                	beqz	a0,ef0 <thread_start_threading+0x22>
         dispatch();
     }
     return;
 
 }
- e08:	60a2                	ld	ra,8(sp)
- e0a:	6402                	ld	s0,0(sp)
- e0c:	0141                	addi	sp,sp,16
- e0e:	8082                	ret
+ ee8:	60a2                	ld	ra,8(sp)
+ eea:	6402                	ld	s0,0(sp)
+ eec:	0141                	addi	sp,sp,16
+ eee:	8082                	ret
         dispatch();
- e10:	00000097          	auipc	ra,0x0
- e14:	ea4080e7          	jalr	-348(ra) # cb4 <dispatch>
+ ef0:	00000097          	auipc	ra,0x0
+ ef4:	e62080e7          	jalr	-414(ra) # d52 <dispatch>
     return;
- e18:	bfc5                	j	e08 <thread_start_threading+0x1a>
+ ef8:	bfc5                	j	ee8 <thread_start_threading+0x1a>
 
-0000000000000e1a <thread_register_handler>:
+0000000000000efa <thread_register_handler>:
 
 // part 2
 void thread_register_handler(int signo, void (*handler)(int)){
- e1a:	1141                	addi	sp,sp,-16
- e1c:	e422                	sd	s0,8(sp)
- e1e:	0800                	addi	s0,sp,16
+ efa:	1141                	addi	sp,sp,-16
+ efc:	e422                	sd	s0,8(sp)
+ efe:	0800                	addi	s0,sp,16
     // TODO
+    current_thread->sig_handler[signo] = handler;
+ f00:	0551                	addi	a0,a0,20
+ f02:	050e                	slli	a0,a0,0x3
+ f04:	00000797          	auipc	a5,0x0
+ f08:	0fc7b783          	ld	a5,252(a5) # 1000 <current_thread>
+ f0c:	953e                	add	a0,a0,a5
+ f0e:	e50c                	sd	a1,8(a0)
+    return;
 }
- e20:	6422                	ld	s0,8(sp)
- e22:	0141                	addi	sp,sp,16
- e24:	8082                	ret
+ f10:	6422                	ld	s0,8(sp)
+ f12:	0141                	addi	sp,sp,16
+ f14:	8082                	ret
 
-0000000000000e26 <thread_kill>:
+0000000000000f16 <thread_kill>:
 
 void thread_kill(struct thread *t, int signo){
- e26:	1141                	addi	sp,sp,-16
- e28:	e422                	sd	s0,8(sp)
- e2a:	0800                	addi	s0,sp,16
+ f16:	1141                	addi	sp,sp,-16
+ f18:	e422                	sd	s0,8(sp)
+ f1a:	0800                	addi	s0,sp,16
     // TODO
- e2c:	6422                	ld	s0,8(sp)
- e2e:	0141                	addi	sp,sp,16
- e30:	8082                	ret
+    t->signo = signo;
+ f1c:	0ab52c23          	sw	a1,184(a0)
+    return;
+ f20:	6422                	ld	s0,8(sp)
+ f22:	0141                	addi	sp,sp,16
+ f24:	8082                	ret
