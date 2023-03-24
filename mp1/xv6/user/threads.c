@@ -8,7 +8,6 @@
 static struct thread* current_thread = NULL;
 static int id = 1;
 static jmp_buf env_st;
-// static jmp_buf env_tmp;
 
 struct thread *thread_create(void (*f)(void *), void *arg){
     struct thread *t = (struct thread*) malloc(sizeof(struct thread));
@@ -71,18 +70,18 @@ void thread_yield(void){
 void dispatch(void){
     // TODO
     if(current_thread->signo>=0){
-        // a signal handler is currently beign handled.
+        // a signal handler is currently being handled
         if(current_thread->handler_buf_set){
             longjmp(current_thread->handler_env, 1);
         }else{
             if(current_thread->sig_handler[current_thread->signo] == NULL_FUNC){
                 thread_exit();
             }
-            if(current_thread->buf_set == 0){ // not started yet, need to move stack pointer
-                if(setjmp(current_thread->handler_env) == 0){
-                    current_thread->handler_env->sp = (unsigned long)current_thread->stack_p;
-                    longjmp(current_thread->handler_env, 1);
-                }
+            current_thread->stack_handler = malloc(sizeof(unsigned long)*0x100);
+            current_thread->stack_handler_p = current_thread->stack_handler +0x100*8-0x2*8;
+            if(setjmp(current_thread->handler_env) == 0){
+                current_thread->handler_env->sp = (unsigned long)current_thread->stack_handler_p;
+                longjmp(current_thread->handler_env, 1);
             }
             current_thread->handler_buf_set = 1;
             current_thread->sig_handler[current_thread->signo](current_thread->signo);
@@ -92,17 +91,16 @@ void dispatch(void){
     if(current_thread->buf_set){
         longjmp(current_thread->env, 1);
     }else{
-        if(!current_thread->handler_buf_set){
-            if(setjmp(current_thread->env) == 0){
-                current_thread->env->sp = (unsigned long)current_thread->stack_p;
-                current_thread->buf_set = 1;
-                longjmp(current_thread->env, 1);
-            }
+        if(setjmp(current_thread->env) == 0){
+            current_thread->env->sp = (unsigned long)current_thread->stack_p;
+            current_thread->buf_set = 1;
+            longjmp(current_thread->env, 1);
         }
         current_thread->buf_set = 1;
         current_thread->fp(current_thread->arg);
     
     }
+    thread_exit();
     return;
 
 }
@@ -123,6 +121,9 @@ void thread_exit(void){
         current_thread->previous->next = current_thread->next;
         current_thread->next->previous = current_thread->previous;
         free(current_thread->stack);
+        if(current_thread->handler_buf_set){
+            free(current_thread->stack_handler);
+        }
         struct thread* t = current_thread;
         current_thread = current_thread->next;
         free(t);
@@ -132,7 +133,9 @@ void thread_exit(void){
     else{
         // TODO
         // Hint: No more thread to execute
-        
+        if(current_thread->handler_buf_set){
+            free(current_thread->stack_handler);
+        }    
         free(current_thread->stack);
         free(current_thread);
         longjmp(env_st, 1);

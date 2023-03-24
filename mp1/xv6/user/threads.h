@@ -11,6 +11,8 @@ struct thread {
     void *arg;
     void *stack;
     void *stack_p;
+    void *stack_handler;
+    void *stack_handler_p;
     jmp_buf env; // for thread function
     int buf_set; //1: indicate jmp_buf (env) has been set, 0: indicate jmp_buf (env) not set
     int ID;
