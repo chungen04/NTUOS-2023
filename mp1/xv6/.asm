@@ -2088,7 +2088,7 @@ void dispatch(void){
  dae:	6798                	ld	a4,8(a5)
  db0:	57fd                	li	a5,-1
  db2:	0af70b63          	beq	a4,a5,e68 <dispatch+0xe2>
-                current_thread->stack_handler = malloc(sizeof(unsigned long)*0x100);
+            current_thread->stack_handler = malloc(sizeof(unsigned long)*0x100);
  db6:	00000497          	auipc	s1,0x0
  dba:	2a248493          	addi	s1,s1,674 # 1058 <current_thread>
  dbe:	0004b903          	ld	s2,0(s1)
@@ -2097,12 +2097,12 @@ void dispatch(void){
  dc8:	00000097          	auipc	ra,0x0
  dcc:	cf0080e7          	jalr	-784(ra) # ab8 <malloc>
  dd0:	02a93023          	sd	a0,32(s2)
-                current_thread->stack_handler_p = current_thread->stack_handler +0x100*8-0x2*8;
+            current_thread->stack_handler_p = current_thread->stack_handler +0x100*8-0x2*8;
  dd4:	6088                	ld	a0,0(s1)
  dd6:	711c                	ld	a5,32(a0)
  dd8:	7f078793          	addi	a5,a5,2032
  ddc:	f51c                	sd	a5,40(a0)
-                if(setjmp(current_thread->handler_env) == 0){
+            if(setjmp(current_thread->handler_env) == 0){
  dde:	0d050513          	addi	a0,a0,208
  de2:	00000097          	auipc	ra,0x0
  de6:	dba080e7          	jalr	-582(ra) # b9c <setjmp>
@@ -2163,12 +2163,12 @@ void dispatch(void){
  e68:	00000097          	auipc	ra,0x0
  e6c:	e6e080e7          	jalr	-402(ra) # cd6 <thread_exit>
  e70:	b799                	j	db6 <dispatch+0x30>
-                    current_thread->handler_env->sp = (unsigned long)current_thread->stack_handler_p;
+                current_thread->handler_env->sp = (unsigned long)current_thread->stack_handler_p;
  e72:	00000517          	auipc	a0,0x0
  e76:	1e653503          	ld	a0,486(a0) # 1058 <current_thread>
  e7a:	751c                	ld	a5,40(a0)
  e7c:	12f53c23          	sd	a5,312(a0)
-                    longjmp(current_thread->handler_env, 1);
+                longjmp(current_thread->handler_env, 1);
  e80:	4585                	li	a1,1
  e82:	0d050513          	addi	a0,a0,208
  e86:	00000097          	auipc	ra,0x0
