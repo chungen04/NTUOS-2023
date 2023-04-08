@@ -1,0 +1,10 @@
+
+xv6 kernel is booting
+
+hart 1 starting
+hart 2 starting
+init: starting sh
+$ mp2_4
+# After page fault
+panic: not implemented yet
+

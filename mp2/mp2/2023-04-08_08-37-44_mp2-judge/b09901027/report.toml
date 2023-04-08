@@ -1,0 +1,27 @@
+status = "finished"
+penalty = 0.0
+total_score = 0.0
+
+[mp2_1]
+verdict = "error: expect page table [address]"
+has_trailing_spaces = false
+score = 0
+
+[mp2_2]
+verdict = "Program part I failed with error: expect page table [address]"
+has_trailing_spaces = false
+score = 0
+
+[mp2_3]
+verdict = "madvise(MADV_NORMAL) test failed with error: unexpected output: panic: not implemented yet"
+has_trailing_spaces = false
+score = 0
+
+[mp2_4]
+verdict = "page fault test failed with error: expect page table [address]"
+has_trailing_spaces = false
+score = 0
+
+[violations]
+has_invalid_zip_file_name = false
+has_trailing_spaces = false
