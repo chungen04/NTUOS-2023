@@ -1,0 +1,1 @@
+docker run -it -v $(pwd)/xv6-riscv:/home/xv6-riscv/ -w /home/xv6-riscv/ --name osmp3 ntuos/mp3 /bin/bash
