@@ -1,0 +1,20 @@
+{
+    "files.associations": {
+        "string.h": "c",
+        "spinlock.h": "c",
+        "types.h": "c",
+        "riscv.h": "c",
+        "atomic": "c",
+        "*.tcc": "c",
+        "fstream": "c",
+        "sstream": "c",
+        "file.h": "c",
+        "fcntl.h": "c",
+        "sleeplock.h": "c",
+        "fs.h": "c",
+        "proc.h": "c",
+        "stat.h": "c",
+        "param.h": "c",
+        "defs.h": "c"
+    }
+}
