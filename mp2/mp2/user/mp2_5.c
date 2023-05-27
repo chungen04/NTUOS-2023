@@ -32,8 +32,9 @@ int main(int argc, char *argv[]) {
   printf("# After madvise(DONTNEED) (1)\n");
   vmprint();
 
-  *(page1+PGSIZE) = 2;
-  *(page1) = 2;
+
+  printf("%d\n", *page1 == 1);
+  printf("\n# After triggering page fault on swapped pages\n");
   vmprint();
   printf("\n");
 
