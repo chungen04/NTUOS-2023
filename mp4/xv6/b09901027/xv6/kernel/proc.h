@@ -100,10 +100,6 @@ struct proc {
   int xstate;                  // Exit status to be returned to parent's wait
   int pid;                     // Process ID
 
-<<<<<<< HEAD:mp4/xv6/b09901027/xv6/kernel/proc.h
-  // proc_tree_lock must be held when using this:
-  struct proc *parent;         // Parent process
-=======
   //TODO: mp3
   int timer_elapsed;
   int delay;
@@ -112,7 +108,6 @@ struct proc {
   int thrd_context_id;
   struct trapframe thrd_context[MAX_THRD_NUM];
   int thrd_context_used[MAX_THRD_NUM];
->>>>>>> 9029cc1fda289fb3b7e5ebb059a3e350e6fe90da:mp3/b09901027/kernel/proc.h
 
   // these are private to the process, so p->lock need not be held.
   uint64 kstack;               // Virtual address of kernel stack

@@ -16,22 +16,11 @@ int nextpid = 1;
 struct spinlock pid_lock;
 
 extern void forkret(void);
-<<<<<<< HEAD
 static void wakeup1(struct proc *chan);
-=======
->>>>>>> 9029cc1fda289fb3b7e5ebb059a3e350e6fe90da
 static void freeproc(struct proc *p);
 
 extern char trampoline[]; // trampoline.S
 
-<<<<<<< HEAD
-=======
-// helps ensure that wakeups of wait()ing
-// parents are not lost. helps obey the
-// memory model when using p->parent.
-// must be acquired before any p->lock.
-struct spinlock wait_lock;
->>>>>>> 9029cc1fda289fb3b7e5ebb059a3e350e6fe90da
 
 // Allocate a page for each process's kernel stack.
 // Map it high in memory, followed by an invalid
@@ -56,10 +45,6 @@ procinit(void)
   struct proc *p;
   
   initlock(&pid_lock, "nextpid");
-<<<<<<< HEAD
-=======
-  initlock(&wait_lock, "wait_lock");
->>>>>>> 9029cc1fda289fb3b7e5ebb059a3e350e6fe90da
   for(p = proc; p < &proc[NPROC]; p++) {
       initlock(&p->lock, "proc");
       p->kstack = KSTACK((int) (p - proc));
@@ -128,19 +113,11 @@ allocproc(void)
 
 found:
   p->pid = allocpid();
-<<<<<<< HEAD
 
   //TODO: mp3
 
   // Allocate a trapframe page.
   if((p->trapframe = (struct trapframe *)kalloc()) == 0){
-=======
-  p->state = USED;
-
-  // Allocate a trapframe page.
-  if((p->trapframe = (struct trapframe *)kalloc()) == 0){
-    freeproc(p);
->>>>>>> 9029cc1fda289fb3b7e5ebb059a3e350e6fe90da
     release(&p->lock);
     return 0;
   }
@@ -158,7 +135,6 @@ found:
   memset(&p->context, 0, sizeof(p->context));
   p->context.ra = (uint64)forkret;
   p->context.sp = p->kstack + PGSIZE;
-<<<<<<< HEAD
   
   // MP3
   
@@ -174,8 +150,6 @@ found:
   for(int i=0; i<MAX_THRD_NUM; i++){
     p->thrd_context_used[i] = 0; // unused
   }
-=======
->>>>>>> 9029cc1fda289fb3b7e5ebb059a3e350e6fe90da
 
   return p;
 }
@@ -325,11 +299,8 @@ fork(void)
   }
   np->sz = p->sz;
 
-<<<<<<< HEAD
   np->parent = p;
 
-=======
->>>>>>> 9029cc1fda289fb3b7e5ebb059a3e350e6fe90da
   // copy saved user registers.
   *(np->trapframe) = *(p->trapframe);
 
@@ -365,18 +336,13 @@ fork(void)
 }
 
 // Pass p's abandoned children to init.
-<<<<<<< HEAD
 // Caller must hold p->lock.
-=======
-// Caller must hold wait_lock.
->>>>>>> 9029cc1fda289fb3b7e5ebb059a3e350e6fe90da
 void
 reparent(struct proc *p)
 {
   struct proc *pp;
 
   for(pp = proc; pp < &proc[NPROC]; pp++){
-<<<<<<< HEAD
     // this code uses pp->parent without holding pp->lock.
     // acquiring the lock first could cause a deadlock
     // if pp or a child of pp were also in exit()
@@ -391,11 +357,6 @@ reparent(struct proc *p)
       // the lock on one of init's children (pp). this is why
       // exit() always wakes init (before acquiring any locks).
       release(&pp->lock);
-=======
-    if(pp->parent == p){
-      pp->parent = initproc;
-      wakeup(initproc);
->>>>>>> 9029cc1fda289fb3b7e5ebb059a3e350e6fe90da
     }
   }
 }

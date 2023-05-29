@@ -36,12 +36,8 @@ entry("getpid");
 entry("sbrk");
 entry("sleep");
 entry("uptime");
-<<<<<<< HEAD:mp4/xv6/b09901027/xv6/user/usys.pl
-entry("symlink");
-=======
 # for mp3
 entry("thrdstop");
 entry("thrdresume");
 entry("cancelthrdstop");
 
->>>>>>> 9029cc1fda289fb3b7e5ebb059a3e350e6fe90da:mp3/xv6-riscv/user/usys.pl
