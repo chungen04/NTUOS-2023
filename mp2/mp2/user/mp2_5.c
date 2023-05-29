@@ -19,6 +19,10 @@ int main(int argc, char *argv[]) {
   printf("\n");
 
   /* madvise(MADV_DONTNEED) */
+  *page1 = 1;
+  *(page1+PGSIZE) = 1;
+  *(page1+2*PGSIZE) = 1;
+  
   result = madvise(page1, PGSIZE * 2, MADV_DONTNEED);
   if (result != 0) {
     printf("error: return value of madvise() is incorrect.\n");
@@ -26,6 +30,11 @@ int main(int argc, char *argv[]) {
   }
 
   printf("# After madvise(DONTNEED) (1)\n");
+  vmprint();
+
+
+  printf("%d\n", *page1 == 1);
+  printf("\n# After triggering page fault on swapped pages\n");
   vmprint();
   printf("\n");
 

@@ -10,41 +10,27 @@
 /* Page fault handler */
 int handle_pgfault() {
   /* Find the address that caused the fault */
-  printf("page fault handler\n");
   uint64 va = r_stval();
-  char *mem;
+  pte_t* pte = walk(myproc()->pagetable, va, 0);
+  if(*pte & PTE_S){
+    uint blockno = PTE2BLOCKNO(*pte);
+    uint64 flags = PTE_FLAGS(*pte);
+    *pte = PA2PTE((uint64)kalloc()) | flags;
+    memset((void*)PTE2PA(*pte), 0, PGSIZE);
+    begin_op();
+    read_page_from_disk(ROOTDEV, (char*)PTE2PA(*pte), blockno);
+    bfree_page(ROOTDEV, blockno);
+    end_op();
+    *pte |= PTE_V;
+    *pte &= ~PTE_S;
+  }else{
+    char *mem;
 
-  uint64 sz = PGROUNDDOWN(va);
-  mem = kalloc();
-  memset(mem, 0, PGSIZE);
-  mappages(myproc()->pagetable, sz, sz+PGSIZE, (uint64)mem, PTE_W|PTE_X|PTE_R|PTE_U);
+    uint64 sz = PGROUNDDOWN(va);
+    mem = kalloc();
+    memset(mem, 0, PGSIZE);
+    mappages(myproc()->pagetable, sz, PGSIZE, (uint64)mem, PTE_W|PTE_X|PTE_R|PTE_U);
+    // not sz+PGSIZE...
+  }
   return PGSIZE;
 }
-
-// // Allocate PTEs and physical memory to grow process from oldsz to
-// // newsz, which need not be page aligned.  Returns new size or 0 on error.
-// uint64
-// uvmalloc(pagetable_t pagetable, uint64 oldsz, uint64 newsz)
-// {
-//   char *mem;
-//   uint64 a;
-
-//   if(newsz < oldsz)
-//     return oldsz;
-
-//   oldsz = PGROUNDUP(oldsz);
-//   for(a = oldsz; a < newsz; a += PGSIZE){
-//     mem = kalloc();
-//     if(mem == 0){
-//       uvmdealloc(pagetable, a, oldsz);
-//       return 0;
-//     }
-//     memset(mem, 0, PGSIZE);
-//     if(mappages(pagetable, a, PGSIZE, (uint64)mem, PTE_W|PTE_X|PTE_R|PTE_U) != 0){
-//       kfree(mem);
-//       uvmdealloc(pagetable, a, oldsz);
-//       return 0;
-//     }
-//   }
-//   return newsz;
-// }

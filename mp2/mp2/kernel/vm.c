@@ -181,12 +181,18 @@ uvmunmap(pagetable_t pagetable, uint64 va, uint64 npages, int do_free)
       *pte = 0;
       continue;
     }
+    if((*pte & PTE_S) == 0){
+      *pte = 0;
+      continue;
+    }
+      // panic("uvmunmap: not mapped");
     if(PTE_FLAGS(*pte) == PTE_V)
       panic("uvmunmap: not a leaf");
     if(do_free){
       uint64 pa = PTE2PA(*pte);
       kfree((void*)pa);
     }
+    // printf("cleared: %p\n", *pte);
     *pte = 0;
   }
 }
@@ -280,6 +286,7 @@ freewalk(pagetable_t pagetable)
       freewalk((pagetable_t)child);
       pagetable[i] = 0;
     } else if(pte & PTE_V){
+      // printf("%p\n", &pagetable[i]);
       panic("freewalk: leaf");
     }
   }
@@ -291,8 +298,11 @@ freewalk(pagetable_t pagetable)
 void
 uvmfree(pagetable_t pagetable, uint64 sz)
 {
+  // vmprint(pagetable);
   if(sz > 0)
     uvmunmap(pagetable, 0, PGROUNDUP(sz)/PGSIZE, 1);
+  // printf("sz: %p\n", sz);
+  // vmprint(pagetable);
   freewalk(pagetable);
 }
 
@@ -441,17 +451,31 @@ copyinstr(pagetable_t pagetable, char *dst, uint64 srcva, uint64 max)
 /* NTU OS 2022 */
 /* Print multi layer page table. */
 
-void vmprint_lvl(pagetable_t pagetable, int level, uint64 va_base){
+void vmprint_lvl(pagetable_t pagetable, int level, uint64 va_base, int last_lvl_0, int* last_lvl_1, int lvl_0_idx, int lvl_1_idx){
   if(level>2) return;
   for(int i = 0; i < 512; i++){
     pte_t pte = pagetable[i];
-    if((pte & PTE_V)){
-      for(int i=0; i<level; i++){
-        if(i==0) printf("|   ");
-        else printf("    ");
+    if((pte & PTE_V)||(pte & PTE_S)){
+      for(int j=0; j<level; j++){
+        if(j == 0){
+          if(level != 0){
+            if(lvl_0_idx != last_lvl_0){
+              printf("|   ");
+            }else printf("    ");
+          }
+        }else if (j == 1){
+          if(level == 2){
+            if(lvl_1_idx != last_lvl_1[lvl_0_idx]){
+              printf("|   ");
+            }else printf("    ");
+          }
+        }
       }
-      // printf("%p %p\n", (uint64)(va_base),(uint64)(i << PXSHIFT(2-level)));
-      printf("+-- %d: pte=%p va=%p pa=%p", i, &pagetable[i], (uint64)(va_base)+((uint64)i << PXSHIFT(2-level)), PTE2PA(pte));
+      if(!(pte & PTE_S)){
+        printf("+-- %d: pte=%p va=%p pa=%p", i, &pagetable[i], (uint64)(va_base)+((uint64)i << PXSHIFT(2-level)), PTE2PA(pte));
+      }else{
+        printf("+-- %d: pte=%p va=%p blockno=%p", i, &pagetable[i], (uint64)(va_base)+((uint64)i << PXSHIFT(2-level)), PTE2BLOCKNO(pte));
+      }
       if(pte & PTE_V) printf(" V");
       if(pte & PTE_R) printf(" R");
       if(pte & PTE_W) printf(" W");
@@ -459,22 +483,89 @@ void vmprint_lvl(pagetable_t pagetable, int level, uint64 va_base){
       if(pte & PTE_U) printf(" U");
       if(pte & PTE_S) printf(" S");
       printf("\n");
-      vmprint_lvl((pagetable_t)(PTE2PA(pte)), level+1, (uint64)(va_base)+((uint64)i << PXSHIFT(2-level)));
+      vmprint_lvl((pagetable_t)(PTE2PA(pte)), level+1, (uint64)(va_base)+((uint64)i << PXSHIFT(2-level)), last_lvl_0, last_lvl_1, (level == 0)? i:lvl_0_idx, (level == 1)? i:lvl_1_idx);
+    }
+  }
+}
+
+void calc_last(int* last_0, int* last_1, pagetable_t pagetable){
+  *last_0 = 0;
+  for(int i = 0; i < 512; i++){
+    pte_t pte_0 = pagetable[i];
+    if(pte_0 & PTE_V){
+      *last_0 = i;
+      last_1[i] = 0;
+      for(int j = 0; j<512; j++){
+        pagetable_t new_pgtbl = (pagetable_t)(PTE2PA(pte_0));
+        pte_t pte_1 = new_pgtbl[j];
+        if(pte_1 & PTE_V){
+          last_1[i] = j;
+        }
+      }
     }
   }
 }
 
 void vmprint(pagetable_t pagetable) {
   /* TODO */
-
+  int last_lvl_0;
+  int last_lvl_1[512];
+  calc_last(&last_lvl_0, last_lvl_1, pagetable);
   printf("page table %p\n", pagetable);
-  vmprint_lvl(pagetable, 0, 0);
-  
+  vmprint_lvl(pagetable, 0, 0, last_lvl_0, last_lvl_1, 0, 0);
 }
 
 /* NTU OS 2022 */
 /* Map pages to physical memory or swap space. */
 int madvise(uint64 base, uint64 len, int advice) {
   /* TODO */
-  panic("not implemented yet\n");
+  // panic("not implemented yet\n");
+  if(base+len > myproc()->sz){
+    return -1;
+  }
+  if(advice == MADV_WILLNEED){
+    uint64 pg_low = PGROUNDDOWN(base);
+    uint64 pg_high = PGROUNDUP(base+len);
+    for(uint64 i=pg_low; i<pg_high; i+=PGSIZE){
+      // printf("%p\n", i);
+      pte_t* pte = walk(myproc()->pagetable, i, 1);
+      if(*pte & PTE_S){
+        uint blockno = PTE2BLOCKNO(*pte);
+        uint64 flags = PTE_FLAGS(*pte);
+        *pte = PA2PTE((uint64)kalloc()) | flags;
+        memset((void*)PTE2PA(*pte), 0, PGSIZE);
+        begin_op();
+        read_page_from_disk(ROOTDEV, (char*)PTE2PA(*pte), blockno);
+        bfree_page(ROOTDEV, blockno);
+        end_op();
+        *pte |= PTE_V;
+        *pte &= ~PTE_S;
+      }else if(~(*pte & PTE_V)){
+        *pte = PA2PTE((uint64)kalloc()) | PTE_W | PTE_X | PTE_R | PTE_U;
+        memset((void*)PTE2PA(*pte), 0, PGSIZE);
+        *pte |= PTE_V;
+      }
+    }
+  }else if(advice == MADV_DONTNEED){
+    uint64 pg_low = PGROUNDDOWN(base);
+    uint64 pg_high = PGROUNDUP(base+len);
+    for(uint64 i=pg_low; i<pg_high ; i+=PGSIZE){
+      pte_t* pte = walk(myproc()->pagetable, i, 0);
+      if(*pte & PTE_V){
+        if(~(*pte & PTE_S)){
+          begin_op();
+          uint disk_page = balloc_page(ROOTDEV);
+          // not uint8...
+          write_page_to_disk(ROOTDEV, (char*)PTE2PA(*pte), disk_page);
+          end_op();
+          pte_t flags = PTE_FLAGS(*pte);
+          uvmunmap(myproc()->pagetable, i, 1, 1);
+          *pte = BLOCKNO2PTE(disk_page) | flags;
+        }
+        *pte &= ~PTE_V;
+        *pte |= PTE_S;
+      } 
+    }
+  }
+  return 0;
 }

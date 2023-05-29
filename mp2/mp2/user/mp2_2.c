@@ -8,6 +8,7 @@ int main(int argc, char *argv[]) {
   printf("# Before sbrk(PGSIZE * 2)\n");
   vmprint();
   printf("\n");
+
   char *orig = sbrk(PGSIZE * 2);
 
   printf("# After sbrk(PGSIZE * 2)\n");
