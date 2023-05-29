@@ -28,11 +28,65 @@ trapinithart(void)
 {
   w_stvec((uint64)kernelvec);
 }
-
+ 
 //
 // handle an interrupt, exception, or system call from user space.
 // called from trampoline.S
 //
+
+void handle_timer_intr(){
+  struct proc* p = myproc();
+  if(p->delay < 0){
+    return;
+  }
+  p->timer_elapsed += 1;
+  if(p->timer_elapsed == p->delay){
+    p->delay = -1;
+    p->timer_elapsed = 0;
+  }else{
+    return;
+  }
+  // if timer_elapsed == p_delay... store the trapframe context
+  // context is defined by execution trapframe (env before the timer interrupt)
+  p->thrd_context[p->thrd_context_id].s0 = p->trapframe->s0;
+  p->thrd_context[p->thrd_context_id].s1 = p->trapframe->s1;
+  p->thrd_context[p->thrd_context_id].s2 = p->trapframe->s2;
+  p->thrd_context[p->thrd_context_id].s3 = p->trapframe->s3;
+  p->thrd_context[p->thrd_context_id].s4 = p->trapframe->s4;
+  p->thrd_context[p->thrd_context_id].s5 = p->trapframe->s5;
+  p->thrd_context[p->thrd_context_id].s6 = p->trapframe->s6;
+  p->thrd_context[p->thrd_context_id].s7 = p->trapframe->s7;
+  p->thrd_context[p->thrd_context_id].s8 = p->trapframe->s8;
+  p->thrd_context[p->thrd_context_id].s9 = p->trapframe->s9;
+  p->thrd_context[p->thrd_context_id].s10 = p->trapframe->s10;
+  p->thrd_context[p->thrd_context_id].s11 = p->trapframe->s11;
+  p->thrd_context[p->thrd_context_id].ra = p->trapframe->ra;
+  p->thrd_context[p->thrd_context_id].sp = p->trapframe->sp;
+  p->thrd_context[p->thrd_context_id].t0 = p->trapframe->t0;
+  p->thrd_context[p->thrd_context_id].t1 = p->trapframe->t1;
+  p->thrd_context[p->thrd_context_id].t2 = p->trapframe->t2;
+  p->thrd_context[p->thrd_context_id].t3 = p->trapframe->t3;
+  p->thrd_context[p->thrd_context_id].t4 = p->trapframe->t4;
+  p->thrd_context[p->thrd_context_id].t5 = p->trapframe->t5;
+  p->thrd_context[p->thrd_context_id].t6 = p->trapframe->t6;
+  p->thrd_context[p->thrd_context_id].a0 = p->trapframe->a0;
+  p->thrd_context[p->thrd_context_id].a1 = p->trapframe->a1;
+  p->thrd_context[p->thrd_context_id].a2 = p->trapframe->a2;
+  p->thrd_context[p->thrd_context_id].a3 = p->trapframe->a3;
+  p->thrd_context[p->thrd_context_id].a4 = p->trapframe->a4;
+  p->thrd_context[p->thrd_context_id].a5 = p->trapframe->a5;
+  p->thrd_context[p->thrd_context_id].a6 = p->trapframe->a6;
+  p->thrd_context[p->thrd_context_id].a7 = p->trapframe->a7;
+  p->thrd_context[p->thrd_context_id].gp = p->trapframe->gp;
+  p->thrd_context[p->thrd_context_id].tp = p->trapframe->tp;
+  p->thrd_context[p->thrd_context_id].epc = p->trapframe->epc;
+  // epc should be the handler to execute it after time interrupt
+  p->trapframe->epc = (uint64)p->handler;
+
+  return;
+
+}
+
 void
 usertrap(void)
 {
@@ -77,9 +131,11 @@ usertrap(void)
     exit(-1);
 
   // give up the CPU if this is a timer interrupt.
-  if(which_dev == 2)
+  if(which_dev == 2){
+    //TODO: mp3
+    handle_timer_intr();
     yield();
-
+  }
   usertrapret();
 }
 
@@ -106,6 +162,12 @@ usertrapret(void)
   p->trapframe->kernel_trap = (uint64)usertrap;
   p->trapframe->kernel_hartid = r_tp();         // hartid for cpuid()
 
+  // mp3
+  int which_dev;
+  if(p->timer_elapsed == 0 && (which_dev = devintr()) == 2){
+    p->trapframe->a0 = (uint64)p->handler_arg;
+  }
+
   // set up the registers that trampoline.S's sret will use
   // to get to user space.
   
@@ -120,11 +182,11 @@ usertrapret(void)
 
   // tell trampoline.S the user page table to switch to.
   uint64 satp = MAKE_SATP(p->pagetable);
-
   // jump to trampoline.S at the top of memory, which 
   // switches to the user page table, restores user registers,
   // and switches to user mode with sret.
   uint64 fn = TRAMPOLINE + (userret - trampoline);
+  
   ((void (*)(uint64,uint64))fn)(TRAPFRAME, satp);
 }
 
@@ -150,13 +212,19 @@ kerneltrap()
   }
 
   // give up the CPU if this is a timer interrupt.
-  if(which_dev == 2 && myproc() != 0 && myproc()->state == RUNNING)
+  if(which_dev == 2 && myproc() != 0 && myproc()->state == RUNNING){
+    //TODO: mp3
+    handle_timer_intr();
+    
+
     yield();
+  }
 
   // the yield() may have caused some traps to occur,
   // so restore trap registers for use by kernelvec.S's sepc instruction.
   w_sepc(sepc);
   w_sstatus(sstatus);
+
 }
 
 void

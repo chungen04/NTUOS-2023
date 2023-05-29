@@ -42,8 +42,18 @@
 struct spinlock uart_tx_lock;
 #define UART_TX_BUF_SIZE 32
 char uart_tx_buf[UART_TX_BUF_SIZE];
+<<<<<<< HEAD
 int uart_tx_w; // write next to uart_tx_buf[uart_tx_w++]
 int uart_tx_r; // read next from uart_tx_buf[uar_tx_r++]
+=======
+<<<<<<< HEAD:mp4/xv6/b09901027/xv6/kernel/uart.c
+uint64 uart_tx_w; // write next to uart_tx_buf[uart_tx_w % UART_TX_BUF_SIZE]
+uint64 uart_tx_r; // read next from uart_tx_buf[uar_tx_r % UART_TX_BUF_SIZE]
+=======
+int uart_tx_w; // write next to uart_tx_buf[uart_tx_w++]
+int uart_tx_r; // read next from uart_tx_buf[uar_tx_r++]
+>>>>>>> 9029cc1fda289fb3b7e5ebb059a3e350e6fe90da:mp3/xv6-riscv/kernel/uart.c
+>>>>>>> 9029cc1fda289fb3b7e5ebb059a3e350e6fe90da
 
 extern volatile int panicked; // from printf.c
 

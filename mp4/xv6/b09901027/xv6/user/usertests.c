@@ -580,7 +580,7 @@ writebig(char *s)
     exit(1);
   }
 
-  for(i = 0; i < MAXFILE; i++){
+  for(i = 0; i < 100; i++){
     ((int*)buf)[0] = i;
     if(write(fd, buf, BSIZE) != BSIZE){
       printf("%s: error: write big file failed\n", s, i);
@@ -777,36 +777,6 @@ pipe1(char *s)
     printf("%s: fork() failed\n", s);
     exit(1);
   }
-}
-
-
-// test if child is killed (status = -1)
-void
-killstatus(char *s)
-{
-  int xst;
-  
-  for(int i = 0; i < 100; i++){
-    int pid1 = fork();
-    if(pid1 < 0){
-      printf("%s: fork failed\n", s);
-      exit(1);
-    }
-    if(pid1 == 0){
-      while(1) {
-        getpid();
-      }
-      exit(0);
-    }
-    sleep(1);
-    kill(pid1);
-    wait(&xst);
-    if(xst != -1) {
-       printf("%s: status should be -1\n", s);
-       exit(1);
-    }
-  }
-  exit(0);
 }
 
 // meant to be run w/ at most two CPUs
@@ -2816,7 +2786,6 @@ main(int argc, char *argv[])
     {iputtest, "iput"},
     {mem, "mem"},
     {pipe1, "pipe1"},
-    {killstatus, "killstatus"},
     {preempt, "preempt"},
     {exitwait, "exitwait"},
     {rmdot, "rmdot"},

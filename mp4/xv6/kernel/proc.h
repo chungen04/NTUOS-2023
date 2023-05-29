@@ -1,3 +1,12 @@
+<<<<<<< HEAD
+
+
+// for mp3
+#define MAX_THRD_NUM 16
+
+
+=======
+>>>>>>> 9029cc1fda289fb3b7e5ebb059a3e350e6fe90da
 // Saved registers for kernel context switches.
 struct context {
   uint64 ra;
@@ -80,7 +89,11 @@ struct trapframe {
   /* 280 */ uint64 t6;
 };
 
+<<<<<<< HEAD
+enum procstate { UNUSED, SLEEPING, RUNNABLE, RUNNING, ZOMBIE };
+=======
 enum procstate { UNUSED, USED, SLEEPING, RUNNABLE, RUNNING, ZOMBIE };
+>>>>>>> 9029cc1fda289fb3b7e5ebb059a3e350e6fe90da
 
 // Per-process state
 struct proc {
@@ -88,13 +101,33 @@ struct proc {
 
   // p->lock must be held when using these:
   enum procstate state;        // Process state
+<<<<<<< HEAD
+  struct proc *parent;         // Parent process
+=======
+>>>>>>> 9029cc1fda289fb3b7e5ebb059a3e350e6fe90da
   void *chan;                  // If non-zero, sleeping on chan
   int killed;                  // If non-zero, have been killed
   int xstate;                  // Exit status to be returned to parent's wait
   int pid;                     // Process ID
 
+<<<<<<< HEAD
+<<<<<<< HEAD:mp4/xv6/kernel/proc.h
   // proc_tree_lock must be held when using this:
   struct proc *parent;         // Parent process
+=======
+  //TODO: mp3
+  int timer_elapsed;
+  int delay;
+  void* handler;
+  void* handler_arg;
+  int thrd_context_id;
+  struct trapframe thrd_context[MAX_THRD_NUM];
+  int thrd_context_used[MAX_THRD_NUM];
+>>>>>>> 9029cc1fda289fb3b7e5ebb059a3e350e6fe90da:mp3/xv6-riscv/kernel/proc.h
+=======
+  // proc_tree_lock must be held when using this:
+  struct proc *parent;         // Parent process
+>>>>>>> 9029cc1fda289fb3b7e5ebb059a3e350e6fe90da
 
   // these are private to the process, so p->lock need not be held.
   uint64 kstack;               // Virtual address of kernel stack

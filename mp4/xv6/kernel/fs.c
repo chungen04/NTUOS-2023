@@ -23,7 +23,10 @@
 
 #define min(a, b) ((a) < (b) ? (a) : (b))
 #define max_depth 10
+<<<<<<< HEAD
 #define MAXITER 10 // for following dir symlinks
+=======
+>>>>>>> 9029cc1fda289fb3b7e5ebb059a3e350e6fe90da
 // there should be one superblock per disk device, but we run with
 // only one device
 struct superblock sb; 
@@ -729,20 +732,29 @@ skipelem(char *path, char *name)
 // If parent != 0, return the inode for the parent and copy the final
 // path element into name, which must have room for DIRSIZ bytes.
 // Must be called inside a transaction since it calls iput().
+<<<<<<< HEAD
 
 static struct inode*
 namex(char *path, int nameiparent, char *name)
+=======
+struct inode*
+namex(char *path, int nameiparent, char *name, int nofollow_flag)
+>>>>>>> 9029cc1fda289fb3b7e5ebb059a3e350e6fe90da
 {
   // TODO: Symbolic Link to Directories
   // Modify this function to deal with symbolic links to directories.
   struct inode *ip, *next;
+<<<<<<< HEAD
 
   char symlink[MAXPATH];
+=======
+>>>>>>> 9029cc1fda289fb3b7e5ebb059a3e350e6fe90da
   
   if(*path == '/')
     ip = iget(ROOTDEV, ROOTINO);
   else
     ip = idup(myproc()->cwd);
+<<<<<<< HEAD
   
   int loop_count = 0; // if loop iterates over MAXITER times, terminate the loop.
   while((path = skipelem(path, name)) != 0){
@@ -751,16 +763,31 @@ namex(char *path, int nameiparent, char *name)
     if(loop_count>MAXITER){
       return 0;
     }
+=======
+  while((path = skipelem(path, name)) != 0){
+>>>>>>> 9029cc1fda289fb3b7e5ebb059a3e350e6fe90da
     ilock(ip);
     if(ip->type != T_DIR && ip->type != T_SYMLINK){
       iunlockput(ip);
       return 0;
     }
+<<<<<<< HEAD
+=======
+    if(ip->type == T_SYMLINK && !nofollow_flag){
+      char new_path[MAXPATH];
+      memset(new_path, 0, MAXPATH);
+      readi(ip, 0, (uint64)new_path, 0, MAXPATH);
+      iunlock(ip);
+      ip = namei(new_path);
+      ilock(ip);
+    }
+>>>>>>> 9029cc1fda289fb3b7e5ebb059a3e350e6fe90da
     if(nameiparent && *path == '\0'){
       // Stop one level early.
       iunlock(ip);
       return ip;
     }
+<<<<<<< HEAD
     if(ip->type == T_SYMLINK){
       // modify path and name so that the 
       // read from ip
@@ -777,6 +804,8 @@ namex(char *path, int nameiparent, char *name)
       ip = iget(ROOTDEV, ROOTINO); // go back to root...
       continue;
     }
+=======
+>>>>>>> 9029cc1fda289fb3b7e5ebb059a3e350e6fe90da
     if((next = dirlookup(ip, name, 0)) == 0){
       iunlockput(ip);
       return 0;
@@ -795,10 +824,16 @@ struct inode*
 namei(char *path)
 {
   char name[DIRSIZ];
+<<<<<<< HEAD
   return namex(path, 0, name);
 }
 
 
+=======
+  return namex(path, 0, name, 0);
+}
+
+>>>>>>> 9029cc1fda289fb3b7e5ebb059a3e350e6fe90da
 struct inode*
 recur_namei(char* path, int depth)
 {
@@ -823,5 +858,9 @@ recur_namei(char* path, int depth)
 struct inode*
 nameiparent(char *path, char *name)
 {
+<<<<<<< HEAD
   return namex(path, 1, name);
+=======
+  return namex(path, 1, name, 0);
+>>>>>>> 9029cc1fda289fb3b7e5ebb059a3e350e6fe90da
 }

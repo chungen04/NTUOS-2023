@@ -6,7 +6,10 @@
 #define fail(msg) do {printf("FAILURE: " msg "\n"); failed = 1; goto done;} while (0);
 static int failed = 0;
 
+<<<<<<< HEAD
 
+=======
+>>>>>>> 9029cc1fda289fb3b7e5ebb059a3e350e6fe90da
 static void
 public1()
 {
@@ -78,11 +81,52 @@ done:
   unlink("big.file");
 }
 
+<<<<<<< HEAD
+=======
+/*static void 
+public3()
+{
+  char buf[BSIZE];
+  int fd, blocks;
+  int target = 66666;
+
+  fd = open("big.file", O_CREATE | O_WRONLY);
+  if(fd < 0){
+    fail("bigfile: cannot open big.file for writing\n");
+  }
+
+  blocks = 0;
+  while(1){
+    *(int*)buf = blocks;
+    int cc = write(fd, buf, sizeof(buf));
+    if(cc <= 0)
+      break;
+    blocks++;
+    if (blocks % 100 == 0)
+      printf(".");
+    if(blocks == target)
+      break;
+  }
+  printf("\nwrote %d blocks\n", blocks);
+  if(blocks != target) {
+    fail("bigfile: file is too small\n");
+  }
+  printf("public testcase 3: ok\n");
+
+done:
+  close(fd);
+  unlink("big.file");
+}*/
+>>>>>>> 9029cc1fda289fb3b7e5ebb059a3e350e6fe90da
 
 int
 main()
 {
   public1();
   public2();
+<<<<<<< HEAD
+=======
+  // public3();
+>>>>>>> 9029cc1fda289fb3b7e5ebb059a3e350e6fe90da
   exit(failed);
 }
