@@ -314,14 +314,9 @@ sys_open(void)
       return -1;
     }
   } else {
-<<<<<<< HEAD
     // char name[DIRSIZ];
     // ip = namex(path, 0, name, omode & O_NOFOLLOW, 0);
     ip = namei(path);
-=======
-    char name[DIRSIZ];
-    ip = namex(path, 0, name, omode & O_NOFOLLOW);
->>>>>>> 9029cc1fda289fb3b7e5ebb059a3e350e6fe90da
     if(ip == 0){
       end_op();
       return -1;
@@ -345,30 +340,19 @@ sys_open(void)
     if(!(omode & O_NOFOLLOW)){
       char target [MAXPATH];
       readi(ip, 0, (uint64)target, 0, MAXPATH);
-<<<<<<< HEAD
       iunlockput(ip);
       if((sym_ip = recur_namei(target, 0)) == 0){
         end_op();
         return -1;
       }
       ilock(ip);
-=======
-      if((sym_ip = recur_namei(target, 0)) == 0){
-        iunlockput(ip);
-        end_op();
-        return -1;
-      }
->>>>>>> 9029cc1fda289fb3b7e5ebb059a3e350e6fe90da
       ilock(sym_ip);
       unlock_symlink = 1; // since sym_ip is successfully allocated, the lock of the link file has to be relesed when returned.
       origin_ip = ip;
       ip = sym_ip;
     }
   }
-<<<<<<< HEAD
   
-=======
->>>>>>> 9029cc1fda289fb3b7e5ebb059a3e350e6fe90da
   if((f = filealloc()) == 0 || (fd = fdalloc(f)) < 0){
     if(f){
       fileclose(f);
@@ -461,16 +445,11 @@ sys_chdir(void)
     return -1;
   }
   ilock(ip);
-<<<<<<< HEAD
   if(ip->type != T_DIR && ip->type != T_SYMLINK){
-=======
-  if(ip->type != T_DIR){
->>>>>>> 9029cc1fda289fb3b7e5ebb059a3e350e6fe90da
     iunlockput(ip);
     end_op();
     return -1;
   }
-<<<<<<< HEAD
   if(ip->type == T_SYMLINK){
     char symlink[MAXPATH];
     memset(symlink, 0, MAXPATH);
@@ -483,8 +462,6 @@ sys_chdir(void)
       return -1;
     }
   }
-=======
->>>>>>> 9029cc1fda289fb3b7e5ebb059a3e350e6fe90da
   iunlock(ip);
   iput(p->cwd);
   end_op();

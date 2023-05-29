@@ -82,16 +82,9 @@ public1(void)
   // 3. check b file type
   if (stat_slink("/testsymlink/b", &st) != 0)
     fail("failed to stat b");
-<<<<<<< HEAD
   if(st.type != T_SYMLINK)
     fail("b isn't a symlink");
 
-=======
-  if(st.type != T_SYMLINK){
-    printf("%d\n", st.type);
-    fail("b isn't a symlink");
-  }
->>>>>>> 9029cc1fda289fb3b7e5ebb059a3e350e6fe90da
   // 4. Write a
   if(write(fd1, buf, sizeof(buf)) != 4)
     fail("failed to write to a");
